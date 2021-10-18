@@ -6,6 +6,7 @@ from endpoints import registro as reg
 from endpoints import login as log
 from endpoints import verification as ver
 from endpoints import product as prod
+from endpoints import history as hist
 
 app = Flask(__name__)
 
@@ -26,6 +27,15 @@ def product():
 
     if request.method == 'GET':
         result = prod.get(productId)
+
+        return result
+
+@app.route('/history', methods=['GET'])
+def history():
+    # history = request.args.get('Id', 0)
+
+    if request.method == 'GET':
+        result = hist.get(history)
 
         return result
     
