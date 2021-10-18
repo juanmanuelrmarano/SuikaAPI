@@ -6,6 +6,7 @@ from endpoints import registro as reg
 from endpoints import login as log
 from endpoints import verification as ver
 from endpoints import product as prod
+from endpoints import search as s
 
 app = Flask(__name__)
 
@@ -42,6 +43,16 @@ def userReg():
         result = reg.regUser(email, hashSecure, publicHash)
 
     return result
+
+@app.route('/search', methods=['GET'])
+def find():
+    searchTerm = request.args.get('search', '')
+
+    if request.method == 'GET':
+
+        result = s.get(searchTerm)
+
+        return result
 
 @app.route('/verification', methods=['PUT'])
 def verification():
