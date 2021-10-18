@@ -5,6 +5,7 @@ from endpoints import contents as c
 from endpoints import registro as reg
 from endpoints import login as log
 from endpoints import verification as ver
+from endpoints import product as prod
 
 app = Flask(__name__)
 
@@ -16,6 +17,15 @@ def contents():
     if request.method == 'GET':
 
         result = c.get(pageNum)
+
+        return result
+
+@app.route('/product', methods=['GET'])
+def product():
+    productId = request.args.get('Id', 0)
+
+    if request.method == 'GET':
+        result = prod.get(productId)
 
         return result
     
