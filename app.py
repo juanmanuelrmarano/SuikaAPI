@@ -8,6 +8,8 @@ from endpoints import verification as ver
 from endpoints import product as prod
 from endpoints import history as hist
 from endpoints import search as s
+from endpoints import addlist as ad
+from endpoints import mylist as m
 
 app = Flask(__name__)
 
@@ -37,6 +39,29 @@ def history():
 
     if request.method == 'GET':
         result = hist.get(history)
+
+        return result
+
+@app.route('/addlist', methods=['PUT'])
+def addlist():
+    idContenido = request.json.get('idcontenido')
+    publicHash = request.json.get('publicHash')
+
+    print(publicHash, idContenido, request.method)
+
+    if request.method == 'PUT':
+
+        result = ad.get(publicHash, idContenido)
+
+    return result
+
+@app.route('/mylist', methods=['POST'])
+def mylist():
+    publicHash = request.json.get('publicHash')
+
+    if request.method == 'POST':
+
+        result = m.get(publicHash)
 
         return result
     
