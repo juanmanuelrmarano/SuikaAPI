@@ -19,13 +19,24 @@ def payload(li):
     # Algunas imagenes a veces quedan cortadas, ver si es convenie cambiarlo
     # image = li.a.img['src'].replace('-300x300', '')
 
+    strprice = li.find('span', {'class': 'price'}).text.replace('$', '')
+    print(strprice)
+    if ' ' in strprice:
+        strprice = strprice.split(' ')
+        strprice = strprice[0].split(',')
+        strprice = int(strprice[0].replace('.',''))
+    else: 
+        strprice = strprice.split(',')
+        strprice = int(strprice[0].replace('.',''))
+        # "2.600,00"
+
     payload = {
         'PageId': "Chibi Kokoro",
         'Id'    : li.a['href'].split('/')[-2], #slug del link
         'Title' : li.a.h2.text, 
         'Link'  : li.a['href'], 
         'Image' : li.a.img['src'],
-        'Price' : li.find('span', {'class': 'price'}).text,
+        'Price' : strprice,
         'Date'  : time.strftime('%Y-%m-%d'),
     }
 
