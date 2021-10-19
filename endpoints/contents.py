@@ -19,13 +19,15 @@ def get(pageNum):
     cursor = db['contenidos'].aggregate(pipeline, allowDiskUse=True)
     list_results = list(cursor)
 
+    count = db['contenidos'].count_documents({})
+
     print(list_results)
 
     if len(list_results) == 0:
         list_contents = {'results': None}
     else:
         list_contents = {
-            'total': len(list_results),
+            'total': count,
             'results': list_results
         }
     
