@@ -20,7 +20,7 @@ def payload(li):
     # image = li.a.img['src'].replace('-300x300', '')
 
     strprice = li.find('span', {'class': 'price'}).text.replace('$', '')
-    print(strprice)
+    # print(strprice)
     if ' ' in strprice:
         strprice = strprice.split(' ')
         strprice = strprice[0].split(',')
@@ -30,12 +30,15 @@ def payload(li):
         strprice = int(strprice[0].replace('.',''))
         # "2.600,00"
 
+
+        #-300x300
+
     payload = {
         'PageId': "Chibi Kokoro",
         'Id'    : li.a['href'].split('/')[-2], #slug del link
         'Title' : li.a.h2.text, 
         'Link'  : li.a['href'], 
-        'Image' : li.a.img['src'],
+        'Image' : li.a.img['src'].replace('-300x300', ''),
         'Price' : strprice,
         'Date'  : time.strftime('%Y-%m-%d'),
     }
@@ -63,8 +66,12 @@ def save(payloads):
     # Función básica para insertar todos los payloads de los productos
 
     with pymongo.MongoClient('mongodb://localhost:27017/', connect=False) as client:
-        db = client.suika
-        db['scraping'].insert_many(payloads)
+        db = client.suika_api
+        db['historial'].insert_many(payloads)
+
+        db['contenidos'].delete_many({'PageId': "Chibi Kokoro"})
+
+        db['contenidos'].insert_many(payloads)
 
         client.close()
 
