@@ -33,7 +33,10 @@ def get(publicHash):
 
     count = db['contenidos'].count_documents({})
     if len(list_results) == 0:
-        list_contents = {'results': None}
+        list_contents = {
+            'total': 0,
+            'results': None
+        }
     else:
         list_contents = {
             'total': count,
