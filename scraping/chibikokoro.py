@@ -63,14 +63,21 @@ def get_products(html_soup, payloads):
 
 
 def save(payloads):
-    # Función básica para insertar todos los payloads de los productos
+    # Función básica para insertar los payloads de los productos
 
     with pymongo.MongoClient('mongodb://localhost:27017/', connect=False) as client:
         db = client.suika_api
-        db['historial'].insert_many(payloads)
 
+        # Guarda en la coleccion 'historial'
+        find_history = db['historial'].find_one({'PageId': "Chibi Kokoro", 'Date': time.strftime('%Y-%m-%d')})
+        if find_history:
+            print("Ya hay historial para esta fecha")
+            # print(find_history)
+        else:
+            db['historial'].insert_many(payloads)
+
+        # Guarda todos los payloads en la base 'contenidos', eliminando primero los anteriores.
         db['contenidos'].delete_many({'PageId': "Chibi Kokoro"})
-
         db['contenidos'].insert_many(payloads)
 
         client.close()
