@@ -74,6 +74,7 @@ def get_products(cat_links):
      
 def payload(product):
     # Guarda dependiendo cada campo, la informacion tomada de la pagina.
+    print( "IMAGEEEEEEEEEEEEEEEEEEE", product.a.img['src'])
     payload = {
         'PageId': "Crossover Comics Store",
         'Id'    : product.a['href'].split('/')[-2],
@@ -90,11 +91,22 @@ def payload(product):
 
 
 def save(payloads):
-    # Función básica para insertar todos los payloads de los productos
+    # Función básica para insertar los payloads de los productos
 
     with pymongo.MongoClient('mongodb://localhost:27017/', connect=False) as client:
-        db = client.suika
-        db['scraping'].insert_many(payloads)
+        db = client.suika_api
+
+        # Guarda en la coleccion 'historial'
+        find_history = db['historial'].find_one({'PageId': "Crossover Comics Store", 'Date': time.strftime('%Y-%m-%d')})
+        if find_history:
+            print("Ya hay historial para esta fecha")
+            # print(find_history)
+        else:
+            db['historial'].insert_many(payloads)
+
+        # Guarda todos los payloads en la base 'contenidos', eliminando primero los anteriores.
+        db['contenidos'].delete_many({'PageId': "Crossover Comics Store"})
+        db['contenidos'].insert_many(payloads)
 
         client.close()
 
@@ -140,7 +152,6 @@ TODO:
 cambiar idealmente por requests + paginado. En este link tienen los casos especificos de cada pagina en vez de ir sumandolos todos
 https://www.crossover-comics.com/materia-principal/mangas/page/2/?results_only=true&limit=12&theme=amazonas
 '''
-
 
 
 # {

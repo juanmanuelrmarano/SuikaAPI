@@ -10,14 +10,10 @@ from pymongo      import UpdateOne
 #Iniciamos sesión de requests
 currentSession = requests.session() 
 
-
 def payload(li):
     # Guarda dependiendo cada campo, la informacion tomada de la pagina.
     # En este caso no se encontraron complicaciones ni fueron necesarias validaciones adicionales
     # TODO: Se encontraron algunos pocos casos de productos con un rango de precios. Un caso era venta de diferentes muñecos pokemon. Revisar para que agregue individualmente cada muñeco y su precio respectivo
-
-    # Algunas imagenes a veces quedan cortadas, ver si es convenie cambiarlo
-    # image = li.a.img['src'].replace('-300x300', '')
 
     strprice = li.find('span', {'class': 'price'}).text.replace('$', '')
     # print(strprice)
@@ -30,15 +26,12 @@ def payload(li):
         strprice = int(strprice[0].replace('.',''))
         # "2.600,00"
 
-
-        #-300x300
-
     payload = {
         'PageId': "Chibi Kokoro",
         'Id'    : li.a['href'].split('/')[-2], #slug del link
         'Title' : li.a.h2.text, 
         'Link'  : li.a['href'], 
-        'Image' : li.a.img['src'].replace('-300x300', ''),
+        'Image' : li.a.img['src'].replace('-300x300', ''), ## el replace es para que no limite el tamaño de la foto
         'Price' : strprice,
         'Date'  : time.strftime('%Y-%m-%d'),
     }
